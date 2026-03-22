@@ -1,0 +1,11 @@
+# Gitleaks configuration
+# See: https://github.com/gitleaks/gitleaks#configuration
+
+title = "Gitleaks configuration"
+
+[allowlist]
+description = "Global allowlist"
+paths = [
+    # Environment template file - contains intentional placeholder values
+    '\.env\.example$',
+]
