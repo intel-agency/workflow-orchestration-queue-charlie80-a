@@ -1,6 +1,5 @@
 """Tests for the Work Item model."""
 
-
 from os_apow.models.work_item import (
     TaskType,
     WorkItem,
