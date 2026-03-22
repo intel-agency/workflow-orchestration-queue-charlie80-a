@@ -1,0 +1,85 @@
+# OS-APOW Docker Compose Configuration
+# Local development environment for the orchestration platform
+
+services:
+  # --- Notifier Service (The "Ear") ---
+  # FastAPI webhook receiver for GitHub events
+  notifier:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: os-apow-notifier
+    ports:
+      - "8000:8000"
+    environment:
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - WEBHOOK_SECRET=${WEBHOOK_SECRET}
+      - NOTIFIER_HOST=0.0.0.0
+      - NOTIFIER_PORT=8000
+    env_file:
+      - .env
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - os-apow-network
+    profiles:
+      - notifier
+      - all
+
+  # --- Sentinel Service (The "Brain") ---
+  # Background polling daemon for task orchestration
+  sentinel:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: os-apow-sentinel
+    command: ["python", "-m", "os_apow.main", "sentinel"]
+    environment:
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - GITHUB_ORG=${GITHUB_ORG}
+      - GITHUB_REPO=${GITHUB_REPO}
+      - SENTINEL_BOT_LOGIN=${SENTINEL_BOT_LOGIN:-}
+      - POLL_INTERVAL=${POLL_INTERVAL:-60}
+      - HEARTBEAT_INTERVAL=${HEARTBEAT_INTERVAL:-300}
+    env_file:
+      - .env
+    volumes:
+      # Mount scripts for shell bridge access
+      - ./scripts:/app/scripts:ro
+      # Mount docker socket for devcontainer operations
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+    networks:
+      - os-apow-network
+    profiles:
+      - sentinel
+      - all
+    depends_on:
+      - notifier
+
+  # --- Redis (Optional - Future Phase) ---
+  # For distributed state and caching
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: os-apow-redis
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - redis-data:/data
+  #   networks:
+  #     - os-apow-network
+  #   profiles:
+  #     - redis
+  #     - all
+
+networks:
+  os-apow-network:
+    driver: bridge
+
+# volumes:
+#   redis-data:
