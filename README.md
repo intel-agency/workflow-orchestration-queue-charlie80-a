@@ -110,6 +110,57 @@ source .venv/bin/activate  # Linux/macOS
 .venv\Scripts\activate     # Windows
 ```
 
+### Environment Verification
+
+After setup, verify your Python environment is correctly configured:
+
+```bash
+# Run the verification script
+./scripts/verify-python-env.sh
+```
+
+This script checks:
+- Python 3.12+ is available
+- uv package manager (0.10.9+) is installed
+- Virtual environment exists and is valid
+- Core dependencies are importable (fastapi, pydantic, httpx, pytest, ruff, mypy)
+- Tool versions (pytest, ruff, mypy)
+- CI/CD environment configuration matches
+
+#### Manual Verification
+
+You can also verify manually:
+
+```bash
+# Check Python version (requires 3.12+)
+python3 --version
+# Output: Python 3.12.x
+
+# Check uv version
+uv --version
+# Output: uv 0.10.9
+
+# Verify dependencies are importable
+uv run python -c "import fastapi, pydantic, httpx, pytest, ruff, mypy; print('All imports successful')"
+
+# Check pytest works
+uv run pytest --version
+# Output: pytest 9.0.x
+```
+
+#### Expected Versions
+
+| Tool | Minimum Version | Current (DevContainer) |
+|------|-----------------|------------------------|
+| Python | 3.12 | 3.12.3 |
+| uv | 0.10.9 | 0.10.9 |
+| pytest | 8.3.0 | 9.0.2 |
+| ruff | 0.8.0 | 0.15.7 |
+| mypy | 1.13.0 | 1.19.1 |
+| fastapi | 0.115.0 | 0.135.1 |
+| pydantic | 2.10.0 | 2.12.5 |
+| httpx | 0.28.0 | 0.28.1 |
+
 ## Environment Configuration
 
 This project uses environment variables for configuration. Secrets are managed through
