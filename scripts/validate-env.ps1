@@ -395,8 +395,8 @@ if ($ValidationErrors.Count -eq 0) {
 } else {
     if ($ShowReport) {
         Write-Host "❌ Validation failed with $($ValidationErrors.Count) error(s):" -ForegroundColor $Colors.Error
-        foreach ($error in $ValidationErrors) {
-            Write-Host "   - $error" -ForegroundColor $Colors.Error
+        foreach ($validationError in $ValidationErrors) {
+            Write-Host "   - $validationError" -ForegroundColor $Colors.Error
         }
         Write-Host ""
         Write-Host "Fix the errors above and run this script again." -ForegroundColor $Colors.Warning
