@@ -54,6 +54,62 @@ This repository implements a headless agentic orchestration system that transfor
 2. **Open in DevContainer** (VS Code or GitHub Codespaces)
 3. **The opencode server starts automatically** on port 4096
 
+## Python Dependencies
+
+This project uses [uv](https://docs.astral.sh/uv/) for Python dependency management. All dependencies are defined in `pyproject.toml` with lock file integrity maintained via `uv.lock`.
+
+### Initial Setup
+
+After cloning, synchronize all dependencies:
+
+```bash
+uv sync --all-extras
+```
+
+This command:
+- Creates a virtual environment (`.venv/`) if it doesn't exist
+- Installs all dependencies including development extras (pytest, ruff, mypy, etc.)
+- Uses the lock file to ensure reproducible installs
+
+### Dependency Groups
+
+| Group | Description | Installation |
+|-------|-------------|--------------|
+| `dev` | Development tools (pytest, ruff, mypy, coverage) | Included with `--all-extras` |
+
+### Updating Dependencies
+
+To update dependencies while preserving lock file integrity:
+
+```bash
+# Update all dependencies to latest compatible versions
+uv lock --upgrade
+
+# Sync the environment with updated lock file
+uv sync --all-extras
+```
+
+### Adding New Dependencies
+
+```bash
+# Add a runtime dependency
+uv add package-name
+
+# Add a development dependency
+uv add --dev package-name
+```
+
+### Running Commands in the Virtual Environment
+
+```bash
+# Run a single command
+uv run python -m pytest
+
+# Activate the virtual environment manually
+source .venv/bin/activate  # Linux/macOS
+.venv\Scripts\activate     # Windows
+```
+
 ## Environment Configuration
 
 This project uses environment variables for configuration. Secrets are managed through
@@ -143,7 +199,17 @@ Copy the example file: `cp .env.example .env`
 
 #### Python import errors
 
-Install dependencies: `pip install -r requirements.txt`
+Synchronize dependencies using uv:
+
+```bash
+uv sync --all-extras
+```
+
+Or use the legacy pip method:
+
+```bash
+pip install -r requirements.txt
+```
 
 ## Development
 
