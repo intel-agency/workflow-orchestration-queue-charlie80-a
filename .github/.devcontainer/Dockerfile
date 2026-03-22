@@ -23,8 +23,8 @@ RUN curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin \
 ENV DOTNET_ROOT=/usr/share/dotnet
 ENV PATH="${PATH}:${DOTNET_ROOT}:${DOTNET_ROOT}/tools"
 
-# Avalonia templates
-RUN dotnet new install Avalonia.Templates::11.3.12
+# Avalonia templates (use @ syntax instead of deprecated ::)
+RUN dotnet new install Avalonia.Templates@11.3.12
 
 # Bun
 ENV BUN_INSTALL=/usr/local/bun
