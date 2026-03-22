@@ -86,7 +86,7 @@ GitHub Secrets in CI/CD and local `.env` files for development.
 
 | Variable | Description | Source |
 |----------|-------------|--------|
-| `GITHUB_TOKEN` | GitHub API token with `repo`, `read:org` scopes | [Generate](https://github.com/settings/tokens) |
+| `GITHUB_TOKEN` | GitHub API token with `repo`, `read:org`, `read:user` scopes | [Generate](https://github.com/settings/tokens) |
 | `ZHIPU_API_KEY` | ZhipuAI API key for GLM models | [Get key](https://open.bigmodel.cn/) |
 | `GITHUB_REPO` | Target repository in `owner/repo` format | Your repository |
 | `SENTINEL_BOT_LOGIN` | GitHub login of the sentinel bot account | Your bot account |
@@ -105,6 +105,7 @@ GitHub Secrets in CI/CD and local `.env` files for development.
 | `SUBPROCESS_TIMEOUT` | `1800` | Subprocess timeout in seconds |
 | `DAILY_BUDGET_LIMIT` | `10.0` | Daily API budget limit (USD) |
 | `GITHUB_WEBHOOK_PORT` | `8080` | Webhook listener port |
+| `GITHUB_APP_ID` | - | GitHub App ID for authentication |
 | `LOG_LEVEL` | `INFO` | Logging level |
 | `ENVIRONMENT` | `development` | Deployment environment |
 

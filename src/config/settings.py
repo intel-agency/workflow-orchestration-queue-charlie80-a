@@ -61,7 +61,6 @@ class SentinelSettings(BaseSettings):
     """
 
     model_config = SettingsConfigDict(
-        env_prefix="SENTINEL_",
         env_file=".env",
         env_file_encoding="utf-8",
         extra="ignore",
@@ -70,18 +69,19 @@ class SentinelSettings(BaseSettings):
     # Required settings
     github_repo: str = Field(
         ...,
+        alias="GITHUB_REPO",
         description="Target repository in 'owner/repo' format",
         examples=["intel-agency/workflow-orchestration-queue-charlie80-a"],
     )
     bot_login: str = Field(
         ...,
-        alias="BOT_LOGIN",
+        alias="SENTINEL_BOT_LOGIN",
         description="GitHub login of the sentinel bot account",
         examples=["sentinel-bot[bot]"],
     )
     sentinel_id: str = Field(
         ...,
-        alias="ID",
+        alias="SENTINEL_ID",
         description="Unique identifier for this sentinel instance",
         examples=["sentinel-001", "prod-sentinel-primary"],
     )
@@ -91,19 +91,21 @@ class SentinelSettings(BaseSettings):
         default=60,
         ge=1,
         le=3600,
+        alias="POLL_INTERVAL",
         description="Seconds between polling cycles",
     )
     max_backoff: int = Field(
         default=300,
         ge=10,
         le=3600,
+        alias="MAX_BACKOFF",
         description="Maximum backoff seconds on errors",
     )
     heartbeat_interval: int = Field(
         default=300,
         ge=60,
         le=3600,
-        alias="HEARTBEAT_INTERVAL",
+        alias="SENTINEL_HEARTBEAT_INTERVAL",
         description="Seconds between heartbeat checks",
     )
     subprocess_timeout: int = Field(
