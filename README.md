@@ -28,9 +28,14 @@ This repository implements a headless agentic orchestration system that transfor
 │   ├── agents/              # Agent definitions
 │   └── commands/            # Reusable command prompts
 ├── scripts/                 # Helper scripts (PowerShell/Bash)
+├── src/
+│   ├── config/              # Configuration management (Pydantic settings)
+│   └── models/              # Shared data models
 ├── test/                    # Test suite
 ├── plan_docs/               # Architecture and planning documents
 ├── local_ai_instruction_modules/  # Local AI instruction modules
+├── .env.example             # Environment template (copy to .env)
+├── requirements.txt         # Python dependencies
 ├── AGENTS.md                # Project instructions for coding agents
 └── opencode.json            # OpenCode CLI configuration
 ```
@@ -48,6 +53,97 @@ This repository implements a headless agentic orchestration system that transfor
 1. **Clone the repository**
 2. **Open in DevContainer** (VS Code or GitHub Codespaces)
 3. **The opencode server starts automatically** on port 4096
+
+## Environment Configuration
+
+This project uses environment variables for configuration. Secrets are managed through
+GitHub Secrets in CI/CD and local `.env` files for development.
+
+### Local Development Setup
+
+1. **Copy the environment template:**
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Edit `.env` with your actual values:**
+   ```bash
+   # Required: Set your API keys and tokens
+   GITHUB_TOKEN=ghp_your_token_here
+   ZHIPU_API_KEY=your_zhipu_key_here
+   GITHUB_REPO=owner/repo
+   SENTINEL_BOT_LOGIN=your-bot[bot]
+   SENTINEL_ID=sentinel-001
+   WEBHOOK_SECRET=$(openssl rand -hex 32)
+   ```
+
+3. **Validate your configuration:**
+   ```powershell
+   pwsh -NoProfile -File ./scripts/validate-env.ps1
+   ```
+
+### Required Environment Variables
+
+| Variable | Description | Source |
+|----------|-------------|--------|
+| `GITHUB_TOKEN` | GitHub API token with `repo`, `read:org`, `read:user` scopes | [Generate](https://github.com/settings/tokens) |
+| `ZHIPU_API_KEY` | ZhipuAI API key for GLM models | [Get key](https://open.bigmodel.cn/) |
+| `GITHUB_REPO` | Target repository in `owner/repo` format | Your repository |
+| `SENTINEL_BOT_LOGIN` | GitHub login of the sentinel bot account | Your bot account |
+| `SENTINEL_ID` | Unique identifier for this sentinel instance | Any unique string |
+| `WEBHOOK_SECRET` | Secret for validating webhook payloads | Generate with `openssl rand -hex 32` |
+
+### Optional Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `GITHUB_PERSONAL_ACCESS_TOKEN` | (uses `GITHUB_TOKEN`) | PAT for MCP GitHub server |
+| `KIMI_CODE_ORCHESTRATOR_AGENT_API_KEY` | - | Kimi/Moonshot API key |
+| `POLL_INTERVAL` | `60` | Seconds between polling cycles |
+| `MAX_BACKOFF` | `300` | Maximum backoff on errors |
+| `SENTINEL_HEARTBEAT_INTERVAL` | `300` | Seconds between heartbeats |
+| `SUBPROCESS_TIMEOUT` | `1800` | Subprocess timeout in seconds |
+| `DAILY_BUDGET_LIMIT` | `10.0` | Daily API budget limit (USD) |
+| `GITHUB_WEBHOOK_PORT` | `8080` | Webhook listener port |
+| `GITHUB_APP_ID` | - | GitHub App ID for authentication |
+| `LOG_LEVEL` | `INFO` | Logging level |
+| `ENVIRONMENT` | `development` | Deployment environment |
+
+### GitHub Secrets (CI/CD)
+
+For GitHub Actions workflows, set these secrets in your repository settings
+(Settings → Secrets and variables → Actions):
+
+- `GITHUB_TOKEN` — Automatically provided by GitHub Actions
+- `ZHIPU_API_KEY` — Your ZhipuAI API key
+- `KIMI_CODE_ORCHESTRATOR_AGENT_API_KEY` — (Optional) Kimi API key
+
+### Security Notes
+
+- **Never commit `.env` files** — They are excluded via `.gitignore`
+- **Use strong secrets** — Generate webhook secrets with `openssl rand -hex 32`
+- **Rotate tokens regularly** — Especially if they may have been exposed
+- **Minimal permissions** — Grant only required scopes to GitHub tokens
+
+### Troubleshooting
+
+#### "Missing required variable" error
+
+Ensure all required variables are set in your `.env` file or environment.
+Run `pwsh scripts/validate-env.ps1` to see which variables are missing.
+
+#### "Placeholder value detected" error
+
+Replace `YOUR_VALUE_HERE` placeholders with actual values. The validation
+script rejects placeholder values to prevent misconfiguration.
+
+#### ".env file not found" warning
+
+Copy the example file: `cp .env.example .env`
+
+#### Python import errors
+
+Install dependencies: `pip install -r requirements.txt`
 
 ## Development
 
