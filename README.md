@@ -1,5 +1,6 @@
 # workflow-orchestration-queue-charlie80-a
 
+<!-- Project initialized: 2026-04-06 -->
 GitHub Actions-based AI orchestration system. On GitHub events (issues, PR comments, reviews),
 the `orchestrator-agent` workflow assembles a structured prompt, spins up a devcontainer,
 and runs `opencode --agent Orchestrator` to delegate work to specialist sub-agents in `.opencode/agents/`.
