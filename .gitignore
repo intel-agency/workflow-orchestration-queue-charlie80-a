@@ -424,6 +424,9 @@ FodyWeavers.xsd
 
 gha-creds-*.json
 
+# Orchestrator agent assembled prompt (generated at runtime)
+.assembled-orchestrator-prompt.md
+
 # Docker validation artifacts
 docker/validation/logs/
 docker/validation/results.jsonl
